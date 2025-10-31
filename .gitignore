@@ -1,0 +1,14 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+
+# PyCharm project settings
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
