@@ -104,14 +104,14 @@ def linear_separation():
 
     neural_network.predict(x)
 
-    # Points below the line → expected class 0
+    #points below the line → expected class 0
     test_points_0 = np.array([
         [0.1, 0.1],
         [0.3, 0.2],
         [0.5, 0.3]
     ])
 
-    # Points above the line → expected class 1
+    #points above the line → expected class 1
     test_points_1 = np.array([
         [0.1, 0.5],
         [0.4, 0.6],
@@ -122,6 +122,7 @@ def linear_separation():
     y_test = (X_test[:, 1] > 0.5 * X_test[:, 0] + 0.2).astype(int)
     predictions = neural_network.predict(X_test)
     predicted_classes = (predictions.flatten() > 0.5).astype(int)
+
     print(" x1     x2   | Expected  Predicted")
     print("---------------------------------")
     for i in range(len(X_test)):
