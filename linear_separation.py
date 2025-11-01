@@ -6,7 +6,7 @@ class Neuron:
     def __init__(self, num_inputs):
         self.inputs = None
         self.output = None
-        self.weights = np.random.uniform(size=(num_inputs))
+        self.weights = np.random.uniform(size=num_inputs)
         self.bias = np.random.uniform()
 
     def activate(self, inputs):
@@ -44,6 +44,7 @@ class NeuralNetwork:
     def __init__(self, layers, learning_rate=0.1, epochs=10000):
         self.learning_rate = learning_rate
         self.epochs = epochs
+        self.loss_history = []
         self.layers = []
 
         for i in range(len(layers) - 1):
@@ -63,6 +64,7 @@ class NeuralNetwork:
 
             if epoch % 1000 == 0:
                 mse = total_error / len(inputs)
+                self.loss_history.append(mse)
                 print(f'Epoch {epoch}, MSE: {mse}')
 
     def _forward(self, initial_input):
@@ -89,6 +91,36 @@ class NeuralNetwork:
 def _sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
+
+def visualize(neural_network, x, y):
+    # --- Plot loss curve ---
+    plt.figure(figsize=(8, 5))
+    plt.plot(range(0, neural_network.epochs, 1000), neural_network.loss_history)
+    plt.xlabel("Epochs")
+    plt.ylabel("Mean Squared Error")
+    plt.title("Training Loss Curve")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig("loss_curve.png")
+    plt.close()
+
+    # --- Plot decision boundary ---
+    x_min, x_max = x[:, 0].min() - 0.1, x[:, 0].max() + 0.1
+    y_min, y_max = x[:, 1].min() - 0.1, x[:, 1].max() + 0.1
+    xx, yy = np.meshgrid(np.linspace(x_min, x_max, 200),
+                         np.linspace(y_min, y_max, 200))
+    grid = np.c_[xx.ravel(), yy.ravel()]
+    preds = neural_network.predict(grid).reshape(xx.shape)
+
+    plt.figure(figsize=(7, 6))
+    plt.contourf(xx, yy, preds, levels=[0, 0.5, 1], cmap="coolwarm", alpha=0.6)
+    plt.scatter(x[:, 0], x[:, 1], c=y, cmap="bwr", edgecolors="k", s=40)
+    plt.title("Decision Boundary")
+    plt.xlabel("x₁")
+    plt.ylabel("x₂")
+    plt.tight_layout()
+    plt.savefig("decision_boundary.png")
+    plt.close()
 
 
 def linear_separation():
@@ -127,6 +159,8 @@ def linear_separation():
     print("---------------------------------")
     for i in range(len(X_test)):
         print(f"{X_test[i, 0]:.2f}  {X_test[i, 1]:.2f}  |    {y_test[i]}        {predicted_classes[i]}")
+
+    visualize(neural_network, x, y)
 
 if __name__ == '__main__':
     linear_separation()
