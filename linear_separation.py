@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -163,4 +164,8 @@ def linear_separation():
     visualize(neural_network, x, y)
 
 if __name__ == '__main__':
+    start = time.time()
     linear_separation()
+    end = time.time()
+
+    print(f"Time taken: {end - start:.6f} seconds")
